@@ -88,6 +88,9 @@ sparc-linux*)	opt_bash_malloc=no ;;	# sparc running linux; requires ELF
 *-qnx*)		opt_bash_malloc=no ;;	# QNX 4.2, QNX [67].x
 *-nsk*)		opt_bash_malloc=no ;;	# HP NonStop
 *-haiku*)	opt_bash_malloc=no ;;	# Haiku OS
+# Recent FreeBSD architectures lack the deprecated sbrk(2)
+aarch64-freebsd*)	opt_bash_malloc=no ;;
+riscv*-freebsd*)	opt_bash_malloc=no ;;
 # Deprecated -- bash malloc is suitable
 #sparc-netbsd*)	opt_bash_malloc=no ;;	# needs 8-byte alignment
 #mips-irix6*)	opt_bash_malloc=no ;;	# needs 8-byte alignment
