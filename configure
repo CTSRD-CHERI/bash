@@ -1583,8 +1583,8 @@ Some influential environment variables:
               you have headers in a nonstandard directory <include dir>
   CPP         C preprocessor
   YACC        The `Yet Another Compiler Compiler' implementation to use.
-              Defaults to the first program found out of: `bison -y', `byacc',
-              `yacc'.
+              Defaults to the first program found out of: `bison -o y.tab.c',
+              `byacc', `yacc'.
   YFLAGS      The list of arguments that will be passed by default to $YACC.
               This script will default YFLAGS to the empty string to avoid a
               default value of `-d' given by some make applications.
@@ -2649,7 +2649,6 @@ as_fn_append ac_header_list " unistd.h"
 as_fn_append ac_header_list " sys/param.h"
 as_fn_append ac_header_list " sys/time.h"
 as_fn_append ac_func_list " alarm"
-as_fn_append ac_func_list " sbrk"
 as_fn_append ac_func_list " fpurge"
 as_fn_append ac_func_list " __fpurge"
 as_fn_append ac_func_list " snprintf"
@@ -2872,6 +2871,9 @@ sparc-linux*)	opt_bash_malloc=no ;;	# sparc running linux; requires ELF
 *-qnx*)		opt_bash_malloc=no ;;	# QNX 4.2, QNX [67].x
 *-nsk*)		opt_bash_malloc=no ;;	# HP NonStop
 *-haiku*)	opt_bash_malloc=no ;;	# Haiku OS
+# Recent FreeBSD architectures lack the deprecated sbrk(2)
+aarch64-freebsd*)	opt_bash_malloc=no ;;
+riscv*-freebsd*)	opt_bash_malloc=no ;;
 # Deprecated -- bash malloc is suitable
 #sparc-netbsd*)	opt_bash_malloc=no ;;	# needs 8-byte alignment
 #mips-irix6*)	opt_bash_malloc=no ;;	# needs 8-byte alignment
@@ -5816,7 +5818,7 @@ else
   RANLIB="$ac_cv_prog_RANLIB"
 fi
 
-for ac_prog in 'bison -y' byacc
+for ac_prog in 'bison -o y.tab.c' byacc
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -14505,9 +14507,33 @@ fi
 
 
 
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sbrk" >&5
+$as_echo_n "checking for sbrk... " >&6; }
+  if ${ac_cv_func_sbrk+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <unistd.h>
+int
+main ()
+{
+ void *x = sbrk (4096);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_func_sbrk=yes
+else
+  ac_cv_func_sbrk=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
 
-
-
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_sbrk" >&5
+$as_echo "$ac_cv_func_sbrk" >&6; }
   if test X$ac_cv_func_sbrk = Xyes; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working sbrk" >&5
 $as_echo_n "checking for working sbrk... " >&6; }
@@ -14552,9 +14578,9 @@ $as_echo "$bash_cv_func_sbrk" >&6; }
       ac_cv_func_sbrk=no
     fi
   fi
-  if test $ac_cv_func_sbrk = no; then
+  if test $ac_cv_func_sbrk = yes; then
 
-$as_echo "#define HAVE_SBRK 0" >>confdefs.h
+$as_echo "#define HAVE_SBRK 1" >>confdefs.h
 
   fi
 
@@ -14568,6 +14594,7 @@ else
 /* end confdefs.h.  */
 #include <sys/types.h>
 #include <signal.h>
+#include <string.h>
 int
 main ()
 {
