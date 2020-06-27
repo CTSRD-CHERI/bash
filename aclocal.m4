@@ -300,7 +300,8 @@ AC_DEFUN(BASH_FUNC_STRSIGNAL,
 [AC_MSG_CHECKING([for the existence of strsignal])
 AC_CACHE_VAL(bash_cv_have_strsignal,
 [AC_TRY_LINK([#include <sys/types.h>
-#include <signal.h>],
+#include <signal.h>
+#include <string.h>],
 [char *s = (char *)strsignal(2);],
  bash_cv_have_strsignal=yes, bash_cv_have_strsignal=no)])
 AC_MSG_RESULT($bash_cv_have_strsignal)
