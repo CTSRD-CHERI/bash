@@ -55,6 +55,9 @@
 typedef struct {
   char *variable;
   int size;
+#ifdef __CHERI_PURE_CAPABILITY__
+  _Alignas(max_align_t)
+#endif
   char desired_setting[1]; /* actual size is `size' */
 } SAVED_VAR;
 
