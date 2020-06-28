@@ -100,6 +100,12 @@ riscv*-freebsd*)	opt_bash_malloc=no ;;
 #*-mirbsd*)	opt_bash_malloc=no ;;	# they claim it needs eight-bit alignment
 esac
 
+BASH_CHERI_PURECAP
+# Needs 16-byte alignment and lacks the deprecated sbrk(2)
+if test "$bash_cv_cheri_purecap" = yes; then
+	opt_bash_malloc=no
+fi
+
 # memory scrambling on free()
 case "${host_os}" in
 sco3.2v5*|sco3.2v4*)	opt_memscramble=no ;;

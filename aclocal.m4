@@ -4266,3 +4266,16 @@ else
 fi
 AC_DEFINE_UNQUOTED([FNMATCH_EQUIV_FALLBACK], [$bash_cv_fnmatch_equiv_value], [Whether fnmatch can be used for bracket equivalence classes])
 ])
+
+dnl check whether we are compiling pure capability code
+AC_DEFUN(BASH_CHERI_PURECAP,
+[AC_MSG_CHECKING(whether we are compiling pure capability code)
+AC_CACHE_VAL(bash_cv_cheri_purecap,
+[AC_TRY_CPP([
+#ifndef __CHERI_PURE_CAPABILITY__
+#error
+#endif
+], bash_cv_cheri_purecap=yes, bash_cv_cheri_purecap=no
+)])
+AC_MSG_RESULT($bash_cv_cheri_purecap)
+])
