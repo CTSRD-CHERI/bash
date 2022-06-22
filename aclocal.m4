@@ -1660,13 +1660,13 @@ AC_CACHE_VAL(bash_cv_unusable_rtsigs,
 main ()
 {
   int n_sigs = 2 * NSIG;
-#ifdef SIGRTMIN
-  int rtmin = SIGRTMIN;
+#ifdef SIGRTMAX
+  int rtmax = SIGRTMAX;
 #else
-  int rtmin = 0;
+  int rtmax = 0;
 #endif
 
-  exit(rtmin < n_sigs);
+  exit(rtmax < n_sigs);
 }], bash_cv_unusable_rtsigs=yes, bash_cv_unusable_rtsigs=no,
     [AC_MSG_WARN(cannot check real-time signals if cross compiling -- defaulting to yes)
      bash_cv_unusable_rtsigs=yes]
